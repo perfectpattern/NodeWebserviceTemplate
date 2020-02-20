@@ -1,17 +1,14 @@
 FROM node:alpine
 
-# Add user so we don't need --no-sandbox.
-RUN addgroup -S pptruser && adduser -S -g pptruser pptruser \
-    && mkdir -p /home/pptruser/Downloads /app \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /app
+RUN mkdir /app \
+   && chown -R node:node /app
 
 # Run everything after as non-privileged user.
-USER pptruser
+USER node
 
 WORKDIR /app
-COPY --chown=pptruser:pptruser ["package.json","./"]
-COPY --chown=pptruser:pptruser ["src","./src"]
+COPY --chown=node:node ["package.json","./"]
+COPY --chown=node:node ["src","./src"]
 
 RUN npm install
 EXPOSE 8080
